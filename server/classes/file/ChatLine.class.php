@@ -1,5 +1,5 @@
 <?php
-//ÁÄÌì¼ÇÂ¼²Ù×÷  ºóÐø¿ª·¢
+//èŠå¤©è®°å½•æ“ä½œ  åŽç»­å¼€å‘
 class ChatLine extends ChatBase {
 	
 
