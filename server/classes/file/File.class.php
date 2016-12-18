@@ -20,9 +20,10 @@ class File {
 		self::$instance = new self();
 	}
 	
+	//清除对应文件夹下的所有文件
 	public static function clearDir($dir) {
         $n = 0;
-        if ($dh = opendir($dir)) {
+        if ($dh = opendir($dir)) {	//打开一个目录，读取它的内容，然后关闭
             while (($file = readdir($dh)) !== false) {
                 if ($file == '.' or $file == '..') {
                     continue;
@@ -41,6 +42,7 @@ class File {
         return $n;
     }
 	
+    //切换房间
 	public static function changeUser($oldroomid,$fd,$newroomid){
 		$old = self::$instance->online_dir.$oldroomid.'/'.$fd;
 		$new = self::$instance->online_dir.$newroomid.'/'.$fd;
@@ -49,6 +51,7 @@ class File {
 		return $return;
 	}
 	
+	//检测路径是否为空
 	public static function checkDir($dir, $clear_file = false) {
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0777, true)) {
@@ -62,6 +65,7 @@ class File {
     }
 	//登录
 	public static function login($roomid,$fd, $info){
+		//把字符串写入文件中。
 		$flag = @file_put_contents(self::$instance->online_dir.$roomid.'/'.$fd, @serialize($info));
 		return $flag;
     }
@@ -77,6 +81,9 @@ class File {
         return $online_users;
     }
 	
+    /**
+     * 获取某个房间的在线用户
+     */
 	public static function getUsersByRoom($roomid){
 		$users = array_slice(scandir(self::$instance->online_dir.$roomid.'/'), 2);
 		return $users;
@@ -108,6 +115,10 @@ class File {
 		$info['roomid'] = $roomid;//赋予用户所在的房间
         return $info;
     }
+    
+    /**
+     * 退出
+     */
 	public static function logout($userid) {
 		global $rooms;
 		foreach($rooms as $_k => $_v){
