@@ -20,14 +20,14 @@ class hsw {
 			'task' => 'open',
 			'fd' => $request->fd
 		);
-		echo json_encode($request);
-		echo "\n";
 		$this->serv->task( json_encode($data) );
-		echo "open\n";
 	}
 	
 	public function onMessage( $serv , $frame ){
 		$data = json_decode( $frame->data , true );
+		echo "message:\n";
+		echo json_encode($data);
+		echo "\n";
 		switch($data['type']){
 			case 1://登录
 				$data = array(
