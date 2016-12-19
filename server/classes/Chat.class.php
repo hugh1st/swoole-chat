@@ -96,6 +96,7 @@ class Chat {
 	}
 	//发送新消息
 	public static function sendNewMsg( $data ){
+	    date_default_timezone_set('PRC');
 		$pushMsg['code'] = 2;
 		$pushMsg['msg'] = "";
 		$pushMsg['data']['roomid'] = $data['roomid'];
