@@ -17,9 +17,9 @@ class hsw {
 	
 	public function onOpen( $serv , $request ){
 		$data = array(
-					'task' => 'open',
-					'fd' => $request->fd
-				);
+			'task' => 'open',
+			'fd' => $request->fd
+		);
 		echo json_encode($_REQUEST);
 		$this->serv->task( json_encode($data) );
 		echo "open\n";
