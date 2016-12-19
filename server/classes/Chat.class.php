@@ -13,7 +13,6 @@ class Chat {
 			$email = 'xxx@qq.com';
 		}
 		if(!$name || !$email){
-			
 			throw new Exception('Fill in all the required fields.');
 		}
 		$user = new ChatUser(array(

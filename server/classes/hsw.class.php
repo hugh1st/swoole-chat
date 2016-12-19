@@ -24,12 +24,12 @@ class hsw {
 	}
 	
 	public function onMessage( $serv , $frame ){
-		$data = json_decode( $frame->data , true );
+		$data = json_decode( $frame->data , true );   
 		echo "message:\n";
 		echo json_encode($data);
 		echo "\n";
 		switch($data['type']){
-			case 1://登录
+			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
 				$data = array(
 					'task' => 'login',
 					'params' => array(
@@ -46,7 +46,7 @@ class hsw {
 				}
 				$this->serv->task( json_encode($data) );
 				break;
-			case 2: //新消息
+			case 2: //新消息:{"type":2,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_10.jpg","message":"\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8","c":"text","roomid":"a"}
 				$data = array(
 					'task' => 'new',
 					'params' => array(
@@ -60,7 +60,7 @@ class hsw {
 				);
 				$this->serv->task( json_encode($data) );
 				break;
-			case 3: // 改变房间
+			case 3: // 改变房间:{"type":3,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_2.jpg","oldroomid":"a","roomid":"b"}
 				$data = array(
 					'task' => 'change',
 					'params' => array(
