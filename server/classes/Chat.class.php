@@ -5,6 +5,7 @@ class Chat {
 	 * 登录
 	 */
 	public static function login($roomid,$fd,$name,$email,$avatar){
+	    date_default_timezone_set('PRC');
 		if($name == ""){
 			$name = '游客'.time();
 		}

@@ -5,6 +5,7 @@ class ChatUser extends ChatBase {
 	protected $fd=0,$name = '', $avatar = '',$email='',$roomid='a';
 	
 	public function save(){
+	    date_default_timezone_set('PRC');
 		$time = time();
 		$return = File::login($this->roomid,$this->fd,array('fd'=>$this->fd,'name'=>$this->name,'avatar'=>$this->avatar,'email'=>$this->email,'time'=>date("H:i",time())));
 		return $return;
