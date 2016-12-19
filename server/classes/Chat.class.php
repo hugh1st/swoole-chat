@@ -58,6 +58,7 @@ class Chat {
 		$pushMsg['data']['fd'] = $data['fd'];
 		$pushMsg['data']['name'] = $data['params']['name'];
 		$pushMsg['data']['avatar'] = $data['params']['avatar'];
+		date_default_timezone_set('PRC');
 		$pushMsg['data']['time'] = date("H:i",time());
 		unset( $data );
 		return $pushMsg;
