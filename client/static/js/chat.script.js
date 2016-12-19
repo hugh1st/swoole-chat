@@ -19,12 +19,14 @@ var chat = {
 		remains     : []
 	},
 	init : function (){
+		console.log("init");
 		this.copyright();
 		this.off();
 		chat.data.storage = window.localStorage;
 		this.ws();
 	},
 	doLogin : function( name , email ){
+		console.log("doLogin");
 		if(name == '' || email == ''){
 			name =  $("#name").val();
 			email = $('#email').val();
@@ -50,6 +52,7 @@ var chat = {
 		 
 	},
 	logout : function(){
+		console.log("logout");
 		if(!this.data.login) return false;
 		chat.data.type = 0;
 		chat.data.storage.removeItem('dologin');
@@ -61,6 +64,7 @@ var chat = {
 		location.reload() ;
 	},
 	keySend : function( event ){
+		console.log("keySend");
 		if (event.ctrlKey && event.keyCode == 13) {
 			$('#chattext').val($('#chattext').val() +  "\r\n");
 		}else if( event.keyCode == 13){
@@ -68,17 +72,22 @@ var chat = {
 			this.sendMessage();
 		}
 	},
-	sendMessage : function(){		
+	sendMessage : function(){	
+		console.log("sendMessage");
 		if(!this.data.login) return false;
 		//发送消息操作
 		var text = $('#chattext').val();
 		if(text.length == 0) return false;
 		chat.data.type = 2; //发送消息标志
 		var json = {"type": chat.data.type,"name": chat.data.name,"avatar": chat.data.avatar,"message": text,"c":'text',"roomid":this.data.crd};
+		console.log("sendMessage:");
+		console.log(json);
 		chat.wsSend(JSON.stringify(json));
 		return true;
 	},
 	ws : function(){
+		console.log("ws");
+		console.log(config.wsserver);
 		this.data.wSock = new WebSocket(config.wsserver);
 		this.wsOpen();
 		this.wsMessage();
@@ -86,9 +95,12 @@ var chat = {
 		this.wsOnerror();
 	},
 	wsSend : function(data){
+		console.log("wsSend:");
+		console.log(data);
 		this.data.wSock.send(data);
 	},
 	wsOpen : function (){
+		console.log("wsOpen");
 		this.data.wSock.onopen = function( event ){
 			//初始化房间
 			chat.print('wsopen',event);
@@ -105,6 +117,7 @@ var chat = {
 		}
 	},
 	wsMessage : function(){
+		console.log("wsMessage");
 		this.data.wSock.onmessage=function(event){
 			var d = jQuery.parseJSON(event.data);
 			switch(d.code){
@@ -175,10 +188,12 @@ var chat = {
 		}
 	},
 	wsOnclose : function(){
+		console.log("wsOnclose");
 		this.data.wSock.onclose = function(event){
 		}
 	},
 	wsOnerror : function(){
+		console.log("wsOnerror");
 		this.data.wSock.onerror = function(event){
 			//alert('服务器关闭，请联系QQ:1335244575 开放测试2');
 		}
@@ -188,6 +203,7 @@ var chat = {
 	 *
 	 */
 	initPage:function( data ){
+		console.log("initPage");
 		this.initRooms( data.rooms );
 		this.initUsers( data.users );
 	},
@@ -195,6 +211,7 @@ var chat = {
 	 * 填充房间用户列表
 	 */
 	initUsers : function( data ){
+		console.log("initUsers");
 		if(getJsonLength(data)){
 			for(var item in data){
 				var users = [];
@@ -216,6 +233,7 @@ var chat = {
 	 * 3.初始化每个房间的聊天列表
 	 */
 	initRooms:function(data){
+		console.log("initRooms");
 		var rooms = [];//房间列表
 		var userlists = [];//用户列表
 		var chatlists = [];//聊天列表
@@ -246,6 +264,7 @@ var chat = {
 		}
 	},
 	loginDiv : function(data){
+		console.log("loginDiv");
 		/*设置当前房间*/
 		this.data.crd = data.roomid;
 		/*显示头像*/
@@ -257,6 +276,7 @@ var chat = {
 		});
 	},
 	changeRoom : function(obj){
+		console.log("changeRoom");
 		//未登录
 		if(!this.data.login) {
 			this.shake();
@@ -289,37 +309,44 @@ var chat = {
 	// The addChatLine method ads a chat entry to the page
 	
 	addChatLine : function(t,params,roomid){
+		console.log("addChatLine");
 		var markup = cdiv.render(t,params);
 		$("#chatLineHolder-"+roomid).append(markup);
 		this.scrollDiv('chat-lists');
 	},
 	addUserLine : function(t,params){
+		console.log("addUserLine");
 		var markup = cdiv.render(t,params);
 		$('#conv-lists-'+params.roomid).append(markup);
 	},
 	removeUser : function (t,params){ //type 1=换房切换，0=退出
+		console.log("removeUser");
 		$("#user-"+params.fd).fadeOut(function(){
 			$(this).remove();
 			$("#chatLineHolder").append(cdiv.render(t,params));
 		});
 	},
 	changeUser : function( data ){
+		console.log("changeUser");
 		$("#conv-lists-"+data.oldroomid).find('#user-' + data.fd).fadeOut(function(){
 			$(this).remove();
 			//chat.addChatLine('logout',data,data.oldroomid);
 		});
 	},
 	scrollDiv:function(t){
+		console.log("scrollDiv");
 		var mai=document.getElementById(t);
 		mai.scrollTop = mai.scrollHeight+100;//通过设置滚动高度
 	},
 	remind : function(obj){
+		console.log("remind");
 		var msg = $("#chattext").val();
 		$("#chattext").val(msg + "@" + $(obj).attr('uname') + "　");
 	},
 	
 	// This method displays an error message on the top of the page:
 	displayError : function(divID,msg,f){
+		console.log("displayError");
 		var elem = $('<div>',{
 			id		: divID,
 			html	: msg
@@ -338,12 +365,14 @@ var chat = {
 		elem.hide().appendTo('body').slideDown();
 	},
 	chatAudio : function(){
+		console.log("chatAudio");
 		if ( $("#chatAudio").length <= 0 ) {
 			$('<audio id="chatAudio"><source src="./static/voices/notify.ogg" type="audio/ogg"><source src="./static/voices/notify.mp3" type="audio/mpeg"><source src="./static/voices/notify.wav" type="audio/wav"></audio>').appendTo('body');
 		} 
 		$('#chatAudio')[0].play();
 	},
 	shake : function(){
+		console.log("shake");
 		$("#layout-main").attr("class", "shake_p");
 		var shake = setInterval(function(){  
 			$("#layout-main").attr("class", "");
@@ -351,6 +380,7 @@ var chat = {
 		},200);
 	},
 	off : function(){
+		console.log("off");
 		document.onkeydown = function (event){
 			if ( event.keyCode==116){
 				event.keyCode = 0;
@@ -360,9 +390,11 @@ var chat = {
 		}
 	},
 	copyright:function(){
+		console.log("copyright");
 		console.log("您好！不介意的话可以加QQ讨论学习（1335244575）");
 	},
 	print:function(flag,obj){
+		console.log("print");
 		console.log('----' + flag + ' start-------');
 		console.log(obj);
 		console.log('----' + flag + ' end-------');
