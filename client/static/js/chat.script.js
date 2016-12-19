@@ -1,9 +1,8 @@
 $(document).ready(function(){
-	// Run the init method on document ready:
-	face.init();
+	face.init();	//自定义表情
 	chat.init();
-	
 });
+
 var chat = {
 	data : {
 		wSock       : null,
@@ -87,7 +86,6 @@ var chat = {
 	},
 	ws : function(){
 		console.log("ws");
-		console.log(config.wsserver);
 		this.data.wSock = new WebSocket(config.wsserver);
 		this.wsOpen();
 		this.wsMessage();
@@ -105,23 +103,22 @@ var chat = {
 			//初始化房间
 			chat.print('wsopen',event);
 			//判断是否已经登录过，如果登录过。自动登录。不需要再次输入昵称和邮箱
-			/*
 			var isLogin = chat.data.storage.getItem("dologin");
 			if( isLogin ) {
 				var name =  chat.data.storage.getItem("name");
 				var email =  chat.data.storage.getItem("email");
 				chat.doLogin( name , email );
 			}
-			*/
-			
 		}
 	},
 	wsMessage : function(){
 		console.log("wsMessage");
-		this.data.wSock.onmessage=function(event){
+		//当Browser接收到WebSocketServer发送过来的数据时，就会触发onmessage消息，参数evt中包含server传输过来的数据;
+		this.data.wSock.onmessage = function(event){
 			var d = jQuery.parseJSON(event.data);
+			console.log(event.data);
 			switch(d.code){
-				case 1:
+				case 1:	//登录
 					if(d.data.mine){
 						chat.data.fd = d.data.fd;
 						chat.data.name = d.data.name;
@@ -136,7 +133,7 @@ var chat = {
 					chat.addUserLine('user',d.data);
 					chat.displayError('chatErrorMessage_login',d.msg,1);
 					break;
-				case 2:
+				case 2:	//发送新消息
 					if(d.data.mine){
 						chat.addChatLine('mymessage',d.data,d.data.roomid);
 						$("#chattext").val('');
@@ -154,7 +151,7 @@ var chat = {
 						chat.addChatLine('chatLine',d.data,d.data.roomid);
 					}
 					break;
-				case 3:
+				case 3:	//退出
 					chat.removeUser('logout',d.data);
 					if(d.data.mine && d.data.action == 'logout'){
 						
@@ -165,12 +162,12 @@ var chat = {
 				case 4: //页面初始化
 					chat.initPage(d.data);
 					break;
-				case 5:
+				case 5:	//未登录
 					if(d.data.mine){
 						chat.displayError('chatErrorMessage_logout',d.msg,1);
 					}
 					break;
-				case 6:
+				case 6:	//换房成功
 					if(d.data.mine){
 						//如果是自己
 						
@@ -190,12 +187,13 @@ var chat = {
 	wsOnclose : function(){
 		console.log("wsOnclose");
 		this.data.wSock.onclose = function(event){
+			
 		}
 	},
 	wsOnerror : function(){
 		console.log("wsOnerror");
 		this.data.wSock.onerror = function(event){
-			//alert('服务器关闭，请联系QQ:1335244575 开放测试2');
+			alert('服务器开小差了，请联系我们：e_dao@qq.com');
 		}
 	},
 	/** 
@@ -382,16 +380,16 @@ var chat = {
 	off : function(){
 		console.log("off");
 		document.onkeydown = function (event){
-			if ( event.keyCode==116){
+			console.log(event);
+			if ( event.keyCode == 116){	//屏蔽F5
 				event.keyCode = 0;
 				event.cancelBubble = true;
 				return false;
 			} 
 		}
 	},
-	copyright:function(){
-		console.log("copyright");
-		console.log("您好！不介意的话可以加QQ讨论学习（1335244575）");
+	copyright:function(){	//版权信息
+		console.log("联系我们：e_dao@qq.com");
 	},
 	print:function(flag,obj){
 		console.log("print");
