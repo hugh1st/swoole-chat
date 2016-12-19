@@ -22,6 +22,8 @@ var chat = {
 		this.copyright();
 		this.off();
 		chat.data.storage = window.localStorage;
+		//var height = $(window).height() + 'px';
+		//$('#body').css({'height' : height});
 		this.ws();
 	},
 	doLogin : function( name , email ){
@@ -381,11 +383,12 @@ var chat = {
 		console.log("off");
 		document.onkeydown = function (event){
 			console.log(event);
+			/*
 			if ( event.keyCode == 116){	//屏蔽F5
 				event.keyCode = 0;
 				event.cancelBubble = true;
 				return false;
-			} 
+			} */
 		}
 	},
 	copyright:function(){	//版权信息
