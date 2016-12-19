@@ -20,6 +20,7 @@ class hsw {
 					'task' => 'open',
 					'fd' => $request->fd
 				);
+		echo json_encode($_REQUEST);
 		$this->serv->task( json_encode($data) );
 		echo "open\n";
 	}
