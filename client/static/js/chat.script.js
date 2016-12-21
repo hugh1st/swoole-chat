@@ -22,8 +22,8 @@ var chat = {
 		this.copyright();
 		this.off();
 		chat.data.storage = window.localStorage;
-		//var height = $(window).height() + 'px';
-		//$('#body').css({'height' : height});
+		var height = $(window).height() + 'px';
+		$('#body').css({'height' : height});
 		this.ws();
 	},
 	doLogin : function( name , email ){
