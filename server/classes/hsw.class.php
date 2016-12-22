@@ -16,7 +16,7 @@ class hsw {
 	}
 	
 	public function onOpen( $serv , $request ){
-	    var_dump($request);
+	    var_dump($request->data);
 	    $db = new swoole_mysql;
 	    $server = array(
 	        'host' => '47.90.39.2',
