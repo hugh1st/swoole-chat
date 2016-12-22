@@ -45,7 +45,7 @@ class hsw {
 			            var_dump($db->connect_errno, $db->connect_error);
 			            die;
 			        }
-			        $sql = 'select * from user';
+			        $sql = 'show tables';
 			        echo "3\n";
 			        $db->query($sql, function(swoole_mysql $db, $r) {
 			            echo "4\n";
