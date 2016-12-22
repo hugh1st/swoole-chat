@@ -68,7 +68,8 @@ class hsw {
 				    'database' => 'chat',
 				);
 				
-				$db->connect($server, function ($db, $r) {
+				$db->connect($server, function ($db, $r, $data) {
+				    var_dump($data);
 				    if ($r === false) {
 				        var_dump($db->connect_errno, $db->connect_error);
 				        die;
