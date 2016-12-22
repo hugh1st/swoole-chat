@@ -16,6 +16,7 @@ class hsw {
 	}
 	
 	public function onOpen( $serv , $request ){
+	    var_dump($request);
 	    $db = new swoole_mysql;
 	    $server = array(
 	        'host' => '47.90.39.2',
@@ -29,15 +30,12 @@ class hsw {
 	            var_dump($db->connect_errno, $db->connect_error);
 	            die;
 	        }
-	        $sql = 'show tables';
+	        $sql = 'select * from user';
 	        $db->query($sql, function(swoole_mysql $db, $r) {
 	            global $s;
-	            if ($r === false)
-	            {
+	            if ($r === false){
 	                var_dump($db->error, $db->errno);
-	            }
-	            elseif ($r === true )
-	            {
+	            }elseif ($r === true ){
 	                var_dump($db->affected_rows, $db->insert_id);
 	                $data = array(
 	                    'task' => 'open',
