@@ -30,6 +30,7 @@ class hsw {
 		echo "\n";
 		switch($data['type']){
 			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
+			    
 			    $db = new swoole_mysql;
 			    $server = array(
 			        'host' => '47.90.39.2',
@@ -37,18 +38,23 @@ class hsw {
 			        'password' => 'yyj1988615',
 			        'database' => 'chat',
 			    );
-			    
+			    echo "1\n";
 			    $db->connect($server, function ($db, $r) {
 			        if ($r === false) {
+			            echo "2\n";
 			            var_dump($db->connect_errno, $db->connect_error);
 			            die;
 			        }
 			        $sql = 'select * from user';
+			        echo "3\n";
 			        $db->query($sql, function(swoole_mysql $db, $r) {
+			            echo "4\n";
 			            global $s;
 			            if ($r === false){
+			                echo "5\n";
 			                var_dump($db->error, $db->errno);
 			            }elseif ($r === true ){
+			                echo "6\n";
 			                $data = array(
             					'task' => 'login',
             					'params' => array(
@@ -58,13 +64,16 @@ class hsw {
             					'fd' => $frame->fd,
             					'roomid' =>$data['roomid']
             				);
+			                echo "7\n";
             				if(!$data['params']['token'] || !$data['params']['token'] ){
             					$data['task'] = "nologin";
             					$this->serv->task( json_encode($data) );
             					break;
             				}
+            				echo "8\n";
             				$this->serv->task( json_encode($data) );
 			            }
+			            echo "9\n";
 			            var_dump($r);
 			            $db->close();
 			        });
