@@ -30,66 +30,21 @@ class hsw {
 		echo "\n";
 		switch($data['type']){
 			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
-			    
-			    $db = new swoole_mysql;
-			    $server = array(
-			        'host' => '47.90.39.2',
-			        'user' => 'root',
-			        'password' => 'yyj1988615',
-			        'database' => 'chat',
-			    );
-			    echo "1\n";
-			    $db->connect($server, function ($db, $r) {
-			        if ($r === false) {
-			            echo "2\n";
-			            var_dump($db->connect_errno, $db->connect_error);
-			            die;
-			        }
-			        $sql = 'show tables';
-			        echo "3\n";
-			        $db->query($sql, function(swoole_mysql $db, $r) {
-			            echo "4\n";
-			            global $s;
-			            if ($r === false){
-			                echo "5\n";
-			                var_dump($db->error, $db->errno);
-			            }elseif ($r === true ){
-			                var_dump($db->affected_rows, $db->insert_id);
-			                /*
-			                echo "6\n";
-			                $data = array(
-            					'task' => 'login',
-            					'params' => array(
-            							'token' => $data['token'],
-            							'wxid' => $data['wxid']
-            						),
-            					'fd' => $frame->fd,
-            					'roomid' =>$data['roomid']
-            				);
-			                echo "7\n";
-            				if(!$data['params']['token'] || !$data['params']['token'] ){
-            					$data['task'] = "nologin";
-            					$this->serv->task( json_encode($data) );
-            					break;
-            				}
-            				echo "8\n";
-            				$this->serv->task( json_encode($data) );*/
-			                $data = array(
-			                    'task' => 'login',
-			                    'params' => array(
-			                        'token' => 'a',
-			                        'wxid' => 'b'
-			                    ),
-			                    'fd' => $frame->fd,
-			                    'roomid' => 'a'
-			                );
-			                $this->serv->task( json_encode($data) );
-			            }
-			            echo "9\n";
-			            var_dump($r);
-			            $db->close();
-			        });
-			    });
+				$data = array(
+					'task' => 'login',
+					'params' => array(
+							'token' => $data['token'],
+							'wxid' => $data['wxid']
+						),
+					'fd' => $frame->fd,
+					'roomid' =>$data['roomid']
+				);
+				if(!$data['params']['token'] || !$data['params']['token'] ){
+					$data['task'] = "nologin";
+					$this->serv->task( json_encode($data) );
+					break;
+				}
+				$this->serv->task( json_encode($data) );
 				break;
 			case 2: //新消息:{"type":2,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_10.jpg","message":"\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8","c":"text","roomid":"a"}
 				$data = array(
