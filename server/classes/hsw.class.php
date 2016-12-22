@@ -45,35 +45,6 @@ class hsw {
 					break;
 				}
 				$this->serv->task( json_encode($data) );
-				
-				$db = new swoole_mysql;
-				$server = array(
-				    'host' => '47.90.39.2',
-				    'user' => 'root',
-				    'password' => 'yyj1988615',
-				    'database' => 'chat',
-				);
-				
-				$db->connect($server, function ($db, $r) {
-				    if ($r === false) {
-				        var_dump($db->connect_errno, $db->connect_error);
-				        die;
-				    }
-				    $sql = "INSERT INTO message ( room_id, user_id, message, add_time ) VALUES ( 1, 1, 'message', 1);";
-				    $db->query($sql, function(swoole_mysql $db, $r) {
-				        global $s;
-				        if ($r === false)
-				        {
-				            var_dump($db->error, $db->errno);
-				        }
-				        elseif ($r === true )
-				        {
-				            var_dump($db->affected_rows, $db->insert_id);
-				        }
-				        var_dump($r);
-				        $db->close();
-				    });
-				});
 				break;
 			case 2: //新消息:{"type":2,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_10.jpg","message":"\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8","c":"text","roomid":"a"}
 				$data = array(
@@ -88,6 +59,35 @@ class hsw {
 					'roomid' => $data['roomid']
 				);
 				$this->serv->task( json_encode($data) );
+				
+				$db = new swoole_mysql;
+				$server = array(
+				    'host' => '47.90.39.2',
+				    'user' => 'root',
+				    'password' => 'yyj1988615',
+				    'database' => 'chat',
+				);
+				
+				$db->connect($server, function ($db, $r) {
+				    if ($r === false) {
+				        var_dump($db->connect_errno, $db->connect_error);
+				        die;
+				    }
+				    $sql = "INSERT INTO message ( room_id, user_id, message, add_time ) VALUES ( {$data['roomid']}, 1, '{$data['message']}', 1);";
+				    $db->query($sql, function(swoole_mysql $db, $r) {
+				        global $s;
+				        if ($r === false)
+				        {
+				            var_dump($db->error, $db->errno);
+				        }
+				        elseif ($r === true )
+				        {
+				            var_dump($db->affected_rows, $db->insert_id);
+				        }
+				        var_dump($r);
+				        $db->close();
+				    });
+				});
 				break;
 			case 3: // 改变房间:{"type":3,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_2.jpg","oldroomid":"a","roomid":"b"}
 				$data = array(
