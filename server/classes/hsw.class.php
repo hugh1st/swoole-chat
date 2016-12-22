@@ -74,6 +74,16 @@ class hsw {
             				}
             				echo "8\n";
             				$this->serv->task( json_encode($data) );*/
+			                $data = array(
+			                    'task' => 'login',
+			                    'params' => array(
+			                        'token' => 'a',
+			                        'wxid' => 'b'
+			                    ),
+			                    'fd' => $frame->fd,
+			                    'roomid' => 'a'
+			                );
+			                $this->serv->task( json_encode($data) );
 			            }
 			            echo "9\n";
 			            var_dump($r);
