@@ -132,7 +132,7 @@ class Chat {
 		
 		$pushMsg['data']['roomid'] = $data['roomid'];
 		$pushMsg['data']['fd'] = $data['fd'];
-		$pushMsg['data']['name'] = $data['params']['name'];
+		$pushMsg['data']['wxid'] = $data['params']['wxid'];
 		$pushMsg['data']['avatar'] = DOMAIN.'/static/images/avatar/f1/f_'.rand(1,12).'.jpg';
 		$pushMsg['data']['time'] = date("H:i",time());
 		self::login($data['roomid'],$data['fd'],$data['params']['name'],$data['params']['email'],$pushMsg['data']['avatar']);

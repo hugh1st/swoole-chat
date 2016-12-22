@@ -101,7 +101,7 @@ var chat = {
 			chat.print('wsopen',event);
 			token = "1";
 			wxid = "2";
-			chat.doLogin( token , wxid );
+			//chat.doLogin( token , wxid );
 		}
 	},
 	wsMessage : function(){
@@ -120,7 +120,7 @@ var chat = {
 						chat.data.storage.setItem("dologin",1);
 						chat.data.storage.setItem("token",d.data.token);
 						chat.data.storage.setItem("wxid",chat.data.wxid);
-						document.title = d.data.token + '-' + document.title;
+						document.title = d.data.wxid + '-' + document.title;
 						chat.loginDiv(d.data);
 					} 
 					chat.addChatLine('newlogin',d.data,d.data.roomid);
@@ -338,6 +338,7 @@ var chat = {
 	
 	// This method displays an error message on the top of the page:
 	displayError : function(divID,msg,f){
+		alert(msg);
 		console.log("displayError");
 		var elem = $('<div>',{
 			id		: divID,
