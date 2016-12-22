@@ -126,6 +126,7 @@ class Chat {
 	}
 	//登录
 	public static function doLogin( $data ){
+	    exit;
 	    date_default_timezone_set('PRC');
 		$pushMsg['code'] = 1;
 		$pushMsg['msg'] = $data['params']['name']."加入了群聊";
