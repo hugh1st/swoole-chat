@@ -16,37 +16,11 @@ class hsw {
 	}
 	
 	public function onOpen( $serv , $request ){
-	    var_dump($request->data);
-	    $db = new swoole_mysql;
-	    $server = array(
-	        'host' => '47.90.39.2',
-	        'user' => 'root',
-	        'password' => 'yyj1988615',
-	        'database' => 'chat',
-	    );
-	     
-	    $db->connect($server, function ($db, $r) {
-	        if ($r === false) {
-	            var_dump($db->connect_errno, $db->connect_error);
-	            die;
-	        }
-	        $sql = 'select * from user';
-	        $db->query($sql, function(swoole_mysql $db, $r) {
-	            global $s;
-	            if ($r === false){
-	                var_dump($db->error, $db->errno);
-	            }elseif ($r === true ){
-	                var_dump($db->affected_rows, $db->insert_id);
-	                $data = array(
-	                    'task' => 'open',
-	                    'fd' => $request->fd
-	                );
-	                $this->serv->task( json_encode($data) );
-	            }
-	            var_dump($r);
-	            $db->close();
-	        });
-	    });
+		$data = array(
+			'task' => 'open',
+			'fd' => $request->fd
+		);
+		$this->serv->task( json_encode($data) );
 	}
 	
 	public function onMessage( $serv , $frame ){
@@ -56,21 +30,45 @@ class hsw {
 		echo "\n";
 		switch($data['type']){
 			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
-				$data = array(
-					'task' => 'login',
-					'params' => array(
-							'token' => $data['token'],
-							'wxid' => $data['wxid']
-						),
-					'fd' => $frame->fd,
-					'roomid' =>$data['roomid']
-				);
-				if(!$data['params']['token'] || !$data['params']['wxid'] ){
-					$data['task'] = "nologin";
-					$this->serv->task( json_encode($data) );
-					break;
-				}
-				$this->serv->task( json_encode($data) );
+			    $db = new swoole_mysql;
+			    $server = array(
+			        'host' => '47.90.39.2',
+			        'user' => 'root',
+			        'password' => 'yyj1988615',
+			        'database' => 'chat',
+			    );
+			    
+			    $db->connect($server, function ($db, $r) {
+			        if ($r === false) {
+			            var_dump($db->connect_errno, $db->connect_error);
+			            die;
+			        }
+			        $sql = 'select * from user';
+			        $db->query($sql, function(swoole_mysql $db, $r) {
+			            global $s;
+			            if ($r === false){
+			                var_dump($db->error, $db->errno);
+			            }elseif ($r === true ){
+			                $data = array(
+            					'task' => 'login',
+            					'params' => array(
+            							'token' => $data['token'],
+            							'wxid' => $data['wxid']
+            						),
+            					'fd' => $frame->fd,
+            					'roomid' =>$data['roomid']
+            				);
+            				if(!$data['params']['token'] || !$data['params']['token'] ){
+            					$data['task'] = "nologin";
+            					$this->serv->task( json_encode($data) );
+            					break;
+            				}
+            				$this->serv->task( json_encode($data) );
+			            }
+			            var_dump($r);
+			            $db->close();
+			        });
+			    });
 				break;
 			case 2: //新消息:{"type":2,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_10.jpg","message":"\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8","c":"text","roomid":"a"}
 				$data = array(
