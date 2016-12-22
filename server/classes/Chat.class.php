@@ -126,43 +126,18 @@ class Chat {
 	}
 	//登录
 	public static function doLogin( $data ){
-	    $db = new swoole_mysql;
-	    $server = array(
-	        'host' => '47.90.39.2',
-	        'user' => 'root',
-	        'password' => 'yyj1988615',
-	        'database' => 'chat',
-	    );
-	    
-	    $db->connect($server, function ($db, $r) {
-	        if ($r === false) {
-	            var_dump($db->connect_errno, $db->connect_error);
-	            die;
-	        }
-	        $sql = 'show tables';
-	        $db->query($sql, function(swoole_mysql $db, $r) {
-	            global $s;
-	            if ($r === false){
-	                var_dump($db->error, $db->errno);
-	            }elseif ($r === true ){
-	                var_dump($db->affected_rows, $db->insert_id);
-	                date_default_timezone_set('PRC');
-	                $pushMsg['code'] = 1;
-	                $pushMsg['msg'] = $data['params']['name']."加入了群聊";
-	                
-	                $pushMsg['data']['roomid'] = $data['roomid'];
-	                $pushMsg['data']['fd'] = $data['fd'];
-	                $pushMsg['data']['wxid'] = $data['params']['wxid'];
-	                $pushMsg['data']['avatar'] = DOMAIN.'/static/images/avatar/f1/f_'.rand(1,12).'.jpg';
-	                $pushMsg['data']['time'] = date("H:i",time());
-	                self::login($data['roomid'],$data['fd'],$data['params']['name'],$data['params']['email'],$pushMsg['data']['avatar']);
-	                unset( $data );
-	                return $pushMsg;
-	            }
-	            var_dump($r);
-	            $db->close();
-	        });
-	    });
+	    date_default_timezone_set('PRC');
+		$pushMsg['code'] = 1;
+		$pushMsg['msg'] = $data['params']['name']."加入了群聊";
+		
+		$pushMsg['data']['roomid'] = $data['roomid'];
+		$pushMsg['data']['fd'] = $data['fd'];
+		$pushMsg['data']['wxid'] = $data['params']['wxid'];
+		$pushMsg['data']['avatar'] = DOMAIN.'/static/images/avatar/f1/f_'.rand(1,12).'.jpg';
+		$pushMsg['data']['time'] = date("H:i",time());
+		self::login($data['roomid'],$data['fd'],$data['params']['name'],$data['params']['email'],$pushMsg['data']['avatar']);
+		unset( $data );
+		return $pushMsg;
 	}
 	public static function getRooms(){
 		global $rooms;

@@ -16,11 +16,39 @@ class hsw {
 	}
 	
 	public function onOpen( $serv , $request ){
-		$data = array(
-			'task' => 'open',
-			'fd' => $request->fd
-		);
-		$this->serv->task( json_encode($data) );
+	    $db = new swoole_mysql;
+	    $server = array(
+	        'host' => '47.90.39.2',
+	        'user' => 'root',
+	        'password' => 'yyj1988615',
+	        'database' => 'chat',
+	    );
+	     
+	    $db->connect($server, function ($db, $r) {
+	        if ($r === false) {
+	            var_dump($db->connect_errno, $db->connect_error);
+	            die;
+	        }
+	        $sql = 'show tables';
+	        $db->query($sql, function(swoole_mysql $db, $r) {
+	            global $s;
+	            if ($r === false)
+	            {
+	                var_dump($db->error, $db->errno);
+	            }
+	            elseif ($r === true )
+	            {
+	                var_dump($db->affected_rows, $db->insert_id);
+	                $data = array(
+	                    'task' => 'open',
+	                    'fd' => $request->fd
+	                );
+	                $this->serv->task( json_encode($data) );
+	            }
+	            var_dump($r);
+	            $db->close();
+	        });
+	    });
 	}
 	
 	public function onMessage( $serv , $frame ){
