@@ -54,6 +54,8 @@ class hsw {
 			                echo "5\n";
 			                var_dump($db->error, $db->errno);
 			            }elseif ($r === true ){
+			                var_dump($db->affected_rows, $db->insert_id);
+			                /*
 			                echo "6\n";
 			                $data = array(
             					'task' => 'login',
@@ -71,7 +73,7 @@ class hsw {
             					break;
             				}
             				echo "8\n";
-            				$this->serv->task( json_encode($data) );
+            				$this->serv->task( json_encode($data) );*/
 			            }
 			            echo "9\n";
 			            var_dump($r);
