@@ -10,8 +10,8 @@ var chat = {
 		storage     : null,
 		type	    : 1,
 		fd          : 0,
-		name        : "",
-		email       : "",
+		token        : "",
+		wxid       : "",
 		avatar      : "",
 		rds         : [],//所有房间ID
 		crd         : 'a', //当前房间ID
@@ -26,28 +26,23 @@ var chat = {
 		$('#body').css({'height' : height});
 		this.ws();
 	},
-	doLogin : function( name , email ){
+	doLogin : function( token, wxid ){
 		console.log("doLogin");
-		if(name == '' || email == ''){
-			name =  $("#name").val();
-			email = $('#email').val();
+		if(token == '' || wxid == ''){
+			token =  $("#token").val();
+			wxid = $('#wxid').val();
 		}
-		name = $.trim(name) ;
-		email = $.trim(email) ;
-		if(name == "" || email == ""){
-			chat.displayError('chatErrorMessage_logout',"请输入昵称和Email才可以参与群聊哦～",1);
-			return false;
-		}
-		var  re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-		if(!re.test(email)){
-			chat.displayError('chatErrorMessage_logout',"逗我呢，邮箱长成这样子？？",1);
+		token = $.trim(token) ;
+		wxid = $.trim(wxid) ;
+		if(token == "" || wxid == ""){
+			chat.displayError('chatErrorMessage_logout',"您没有获得授权",1);
 			return false;
 		}
 		//登录操作
 		chat.data.type = 1; //登录标志
-		chat.data.email = email; //邮箱
+		chat.data.wxid = wxid; //邮箱
 		chat.data.login = true;
-		var json = {"type": chat.data.type,"name": name,"email": email,'roomid':'a'};
+		var json = {"type": chat.data.type,"token": token,"wxid": wxid,'roomid':'a'};
 		chat.wsSend(JSON.stringify(json));
 		return false;
 		 
@@ -57,10 +52,10 @@ var chat = {
 		if(!this.data.login) return false;
 		chat.data.type = 0;
 		chat.data.storage.removeItem('dologin');
-		chat.data.storage.removeItem('name');
-		chat.data.storage.removeItem('email');
+		chat.data.storage.removeItem('token');
+		chat.data.storage.removeItem('wxid');
 		chat.data.fd = '';
-		chat.data.name = '';
+		chat.data.token = '';
 		chat.data.avatar = '';
 		location.reload() ;
 	},
@@ -80,7 +75,7 @@ var chat = {
 		var text = $('#chattext').val();
 		if(text.length == 0) return false;
 		chat.data.type = 2; //发送消息标志
-		var json = {"type": chat.data.type,"name": chat.data.name,"avatar": chat.data.avatar,"message": text,"c":'text',"roomid":this.data.crd};
+		var json = {"type": chat.data.type,"token": chat.data.token,"avatar": chat.data.avatar,"message": text,"c":'text',"roomid":this.data.crd};
 		console.log("sendMessage:");
 		console.log(json);
 		chat.wsSend(JSON.stringify(json));
@@ -104,13 +99,9 @@ var chat = {
 		this.data.wSock.onopen = function( event ){
 			//初始化房间
 			chat.print('wsopen',event);
-			//判断是否已经登录过，如果登录过。自动登录。不需要再次输入昵称和邮箱
-			var isLogin = chat.data.storage.getItem("dologin");
-			if( isLogin ) {
-				var name =  chat.data.storage.getItem("name");
-				var email =  chat.data.storage.getItem("email");
-				chat.doLogin( name , email );
-			}
+			token = "1";
+			wxid = "2";
+			chat.doLogin( token , wxid );
 		}
 	},
 	wsMessage : function(){
@@ -121,14 +112,15 @@ var chat = {
 			console.log(event.data);
 			switch(d.code){
 				case 1:	//登录
+					alert("登录" + JSON.stringify(d.data));
 					if(d.data.mine){
 						chat.data.fd = d.data.fd;
-						chat.data.name = d.data.name;
+						chat.data.token = d.data.token;
 						chat.data.avatar = d.data.avatar;
 						chat.data.storage.setItem("dologin",1);
-						chat.data.storage.setItem("name",d.data.name);
-						chat.data.storage.setItem("email",chat.data.email);
-						document.title = d.data.name + '-' + document.title;
+						chat.data.storage.setItem("token",d.data.token);
+						chat.data.storage.setItem("wxid",chat.data.wxid);
+						document.title = d.data.token + '-' + document.title;
 						chat.loginDiv(d.data);
 					} 
 					chat.addChatLine('newlogin',d.data,d.data.roomid);
@@ -144,7 +136,7 @@ var chat = {
 							for(var i = 0 ; i < d.data.remains.length;i++){
 								if(chat.data.fd == d.data.remains[i].fd){
 									chat.shake();
-									var msg = d.data.name + "在群聊@了你。";
+									var msg = d.data.token + "在群聊@了你。";
 									chat.displayError('chatErrorMessage_logout',msg,0);
 								}
 							}
@@ -301,7 +293,7 @@ var chat = {
 		this.data.crd = roomid;
 		//用户切换房间
 		this.data.type = 3;//改变房间
-		var json = {"type": chat.data.type,"name": chat.data.name,"avatar": chat.data.avatar,"oldroomid":oldroomid,"roomid":this.data.crd};
+		var json = {"type": chat.data.type,"token": chat.data.token,"avatar": chat.data.avatar,"oldroomid":oldroomid,"roomid":this.data.crd};
 		chat.wsSend(JSON.stringify(json));
 		
 	},
