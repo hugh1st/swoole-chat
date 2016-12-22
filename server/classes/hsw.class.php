@@ -33,13 +33,13 @@ class hsw {
 				$data = array(
 					'task' => 'login',
 					'params' => array(
-							'name' => $data['name'],
-							'email' => $data['email']
+							'token' => $data['token'],
+							'wxid' => $data['wxid']
 						),
 					'fd' => $frame->fd,
 					'roomid' =>$data['roomid']
 				);
-				if(!$data['params']['name'] || !$data['params']['email'] ){
+				if(!$data['params']['token'] || !$data['params']['wxid'] ){
 					$data['task'] = "nologin";
 					$this->serv->task( json_encode($data) );
 					break;

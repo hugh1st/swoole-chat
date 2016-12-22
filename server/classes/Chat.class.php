@@ -5,6 +5,7 @@ class Chat {
 	 * 登录
 	 */
 	public static function login($roomid,$fd,$name,$email,$avatar){
+	    echo "login\n";
 	    date_default_timezone_set('PRC');
 		if($name == ""){
 			$name = '游客'.time();
@@ -64,6 +65,7 @@ class Chat {
 		return $pushMsg;
 	}
 	public static function noLogin( $data ){
+	    echo "noLogin\n";
 		$pushMsg['code'] = 5;
 		$pushMsg['msg'] = "系统不会存储您的Email，只是为了证明你是一个地球人";
 		if( !$data['params']['name']){
