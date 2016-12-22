@@ -73,7 +73,8 @@ class hsw {
 				        var_dump($db->connect_errno, $db->connect_error);
 				        die;
 				    }
-				    $sql = "INSERT INTO message ( room_id, user_id, message, add_time ) VALUES ( {$data['roomid']}, 1, '{$data['message']}', 1);";
+				    $sql = "INSERT INTO message ( room_id, user_id, message, add_time ) VALUES ( 1, 1, '{$data['message']}', 1);";
+				    echo $sql."\n";
 				    $db->query($sql, function(swoole_mysql $db, $r) {
 				        global $s;
 				        if ($r === false)
