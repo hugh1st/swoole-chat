@@ -65,6 +65,8 @@ class hsw {
 							echo "2\n";
 						}else{
 							echo "3\n";
+							print_r($response);
+							print_r($result);
 							$response['params']['name'] = $result[0]['nickname'];
 							print_r($response);
 							$this->serv->task( json_encode($response) );
