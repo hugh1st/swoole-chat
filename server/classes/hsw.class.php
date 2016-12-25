@@ -31,6 +31,7 @@ class hsw {
 		switch($data['type']){
 			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
 				echo "uuid:".$data['wxid']."\n";
+				$wxid = $data['wxid'];
 				$data = array(
 					'task' => 'login',
 					'params' => array(
@@ -48,7 +49,6 @@ class hsw {
 						'database' => 'chat',
 				);
 				$fields = "user_id";
-				$wxid = $data['wxid'];
 				$db->connect($server, function ($db, $r) use($fields, $wxid) {
 					echo "fields:".$fields."\n";
 					echo "wxid:".$wxid."\n";
