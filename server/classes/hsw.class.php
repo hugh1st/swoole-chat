@@ -60,13 +60,13 @@ class hsw {
 					$sql = "select {$fields} from user where uuid = '{$wxid}'";
 					echo $sql."\n";
 					$db->query($sql, function(swoole_mysql $db, $result) use($response) {
+						print_r($response);
+						print_r($result);
 						echo "1\n";
 						if (empty($result)){
 							echo "2\n";
 						}else{
 							echo "3\n";
-							print_r($response);
-							print_r($result);
 							$response['params']['name'] = $result[0]['nickname'];
 							print_r($response);
 							$this->serv->task( json_encode($response) );
