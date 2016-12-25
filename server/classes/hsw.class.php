@@ -32,7 +32,7 @@ class hsw {
 			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
 				echo "uuid:".$data['wxid']."\n";
 				$wxid = $data['wxid'];
-				$data = array(
+				$response = array(
 					'task' => 'login',
 					'params' => array(
 							'token' => $data['token'],
@@ -48,8 +48,8 @@ class hsw {
 						'password' => 'yyj1988615',
 						'database' => 'chat',
 				);
-				$fields = "user_id";
-				$db->connect($server, function ($db, $r) use($fields, $wxid) {
+				$fields = "user_id, nickname";
+				$db->connect($server, function ($db, $r) use($fields, $wxid, $response) {
 					echo "fields:".$fields."\n";
 					echo "wxid:".$wxid."\n";
 					if ($r === false) {
@@ -58,17 +58,19 @@ class hsw {
 					}
 					$sql = "select {$fields} from user where uuid = '{$wxid}'";
 					echo $sql."\n";
-					$db->query($sql, function(swoole_mysql $db, $result) {
+					$db->query($sql, function(swoole_mysql $db, $result) use($response) {
 						echo "1\n";
 						if (empty($result)){
 							echo "2\n";
 						}else{
 							echo "3\n";
-							$this->serv->task( json_encode($data) );
+							$response['params']['name'] = $result[0]['nickname'];
+							print_r($response);
+							$this->serv->task( json_encode($response) );
 							echo "4\n";
 						}
 						echo "5\n";
-						var_dump($result);
+						print_r($result);
 						echo "6\n";
 						$db->close();
 					});
