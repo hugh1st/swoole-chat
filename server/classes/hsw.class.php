@@ -30,6 +30,7 @@ class hsw {
 		echo "\n";
 		switch($data['type']){
 			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
+				echo "uuid:".$data['wxid']."\n";
 				$data = array(
 					'task' => 'login',
 					'params' => array(
@@ -39,12 +40,38 @@ class hsw {
 					'fd' => $frame->fd,
 					'roomid' =>$data['roomid']
 				);
-				if(!$data['params']['token'] || !$data['params']['token'] ){
-					$data['task'] = "nologin";
-					$this->serv->task( json_encode($data) );
-					break;
-				}
-				$this->serv->task( json_encode($data) );
+				$db = new swoole_mysql;
+				$server = array(
+						'host' => '127.0.0.1',
+						'user' => 'root',
+						'password' => 'yyj1988615',
+						'database' => 'chat',
+				);
+				$fields = "user_id";
+				$wxid = $data['wxid'];
+				$db->connect($server, function ($db, $r) use($fields, $wxid) {
+					if ($r === false) {
+						var_dump($db->connect_errno, $db->connect_error);
+						die;
+					}
+					$sql = "select {$fields} from user where uuid = {$user_id}";
+					$db->query($sql, function(swoole_mysql $db, $r) {
+						global $s;
+						if ($r === false){
+							var_dump($db->error, $db->errno);
+						}elseif ($r === true ){
+							var_dump($db->affected_rows, $db->insert_id);
+							$this->serv->task( json_encode($data) );
+						}
+						var_dump($r);
+						$db->close();
+					});
+				});
+// 				if(!$data['params']['token'] || !$data['params']['token'] ){
+// 					$data['task'] = "nologin";
+// 					$this->serv->task( json_encode($data) );
+// 					break;
+// 				}
 				break;
 			case 2: //新消息:{"type":2,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_10.jpg","message":"\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8","c":"text","roomid":"a"}
 				$data = array(
