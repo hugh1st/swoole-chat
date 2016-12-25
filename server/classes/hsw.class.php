@@ -50,6 +50,8 @@ class hsw {
 				$fields = "user_id";
 				$wxid = $data['wxid'];
 				$db->connect($server, function ($db, $r) use($fields, $wxid) {
+					echo "fields:".$fields."\n";
+					echo "wxid:".$wxid."\n";
 					if ($r === false) {
 						var_dump($db->connect_errno, $db->connect_error);
 						die;
