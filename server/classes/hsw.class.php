@@ -50,6 +50,7 @@ class hsw {
 				);
 				$fields = "user_id, nickname";
 				$db->connect($server, function ($db, $r) use($fields, $wxid, $response) {
+					print_r($response);
 					echo "fields:".$fields."\n";
 					echo "wxid:".$wxid."\n";
 					if ($r === false) {
