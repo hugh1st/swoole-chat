@@ -54,7 +54,7 @@ class hsw {
 						var_dump($db->connect_errno, $db->connect_error);
 						die;
 					}
-					$sql = "select {$fields} from user where uuid = '{$user_id}'";
+					$sql = "select {$fields} from user where uuid = '{$wxid}'";
 					echo $sql."\n";
 					$db->query($sql, function(swoole_mysql $db, $r) {
 						global $s;
