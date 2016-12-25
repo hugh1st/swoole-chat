@@ -5,6 +5,8 @@ class Chat {
 	 * 登录
 	 */
 	public static function login($roomid,$fd,$name,$email,$avatar){
+	    echo "login\n";
+	    date_default_timezone_set('PRC');
 		if($name == ""){
 			$name = '游客'.time();
 		}
@@ -12,7 +14,6 @@ class Chat {
 			$email = 'xxx@qq.com';
 		}
 		if(!$name || !$email){
-			
 			throw new Exception('Fill in all the required fields.');
 		}
 		$user = new ChatUser(array(
@@ -58,11 +59,13 @@ class Chat {
 		$pushMsg['data']['fd'] = $data['fd'];
 		$pushMsg['data']['name'] = $data['params']['name'];
 		$pushMsg['data']['avatar'] = $data['params']['avatar'];
+		date_default_timezone_set('PRC');
 		$pushMsg['data']['time'] = date("H:i",time());
 		unset( $data );
 		return $pushMsg;
 	}
 	public static function noLogin( $data ){
+	    echo "noLogin\n";
 		$pushMsg['code'] = 5;
 		$pushMsg['msg'] = "系统不会存储您的Email，只是为了证明你是一个地球人";
 		if( !$data['params']['name']){
@@ -94,6 +97,7 @@ class Chat {
 	}
 	//发送新消息
 	public static function sendNewMsg( $data ){
+	    date_default_timezone_set('PRC');
 		$pushMsg['code'] = 2;
 		$pushMsg['msg'] = "";
 		$pushMsg['data']['roomid'] = $data['roomid'];
@@ -122,12 +126,13 @@ class Chat {
 	}
 	//登录
 	public static function doLogin( $data ){
+	    date_default_timezone_set('PRC');
 		$pushMsg['code'] = 1;
 		$pushMsg['msg'] = $data['params']['name']."加入了群聊";
 		
 		$pushMsg['data']['roomid'] = $data['roomid'];
 		$pushMsg['data']['fd'] = $data['fd'];
-		$pushMsg['data']['name'] = $data['params']['name'];
+		$pushMsg['data']['wxid'] = $data['params']['wxid'];
 		$pushMsg['data']['avatar'] = DOMAIN.'/static/images/avatar/f1/f_'.rand(1,12).'.jpg';
 		$pushMsg['data']['time'] = date("H:i",time());
 		self::login($data['roomid'],$data['fd'],$data['params']['name'],$data['params']['email'],$pushMsg['data']['avatar']);

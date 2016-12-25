@@ -64,7 +64,7 @@ var face = {
 		{faceName:"握手",facePath:"81_握手.gif"}
 	],
 	init : function (){
-		var isShowImg=false;
+		var isShowImg = false;
 		$(".emotion_btn").click(function(){
 			if(isShowImg==false){
 				isShowImg=true;

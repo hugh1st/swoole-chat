@@ -1,34 +1,34 @@
 <?php
 
 /**
- * ×Ö·û´®·ÀSQL×¢Èë±àÂë£¬¶ÔGET,POST,COOKIEµÄÊı¾İ½øĞĞÔ¤´¦Àí
+ * å­—ç¬¦ä¸²é˜²SQLæ³¨å…¥ç¼–ç ï¼Œå¯¹GET,POST,COOKIEçš„æ•°æ®è¿›è¡Œé¢„å¤„ç†
  *
- * @param  $input Òª´¦Àí×Ö·û´®»òÕßÊı×é
- * @param  $urlencode ÊÇ·ñÒªURL±àÂë
+ * @param  $input è¦å¤„ç†å­—ç¬¦ä¸²æˆ–è€…æ•°ç»„
+ * @param  $urlencode æ˜¯å¦è¦URLç¼–ç 
  */
 function escape($input, $urldecode = 0) {
     if(is_array($input)){
-        foreach($input as $k=>$v){
-            $input[$k]=escape($v,$urldecode);
+        foreach($input as $k=> $v){
+            $input[$k] = escape($v,$urldecode);
         }
     }else{
-        $input=trim($input);
+        $input = trim($input);
         if ($urldecode == 1) {
-            $input=str_replace(array('+'),array('{addplus}'),$input);
+            $input = str_replace(array('+'), array('{addplus}'), $input);
             $input = urldecode($input);
-            $input=str_replace(array('{addplus}'),array('+'),$input);
+            $input = str_replace(array('{addplus}'), array('+'), $input);
         }
-        // PHP°æ±¾´óÓÚ5.4.0£¬Ö±½Ó×ªÒå×Ö·û
+        // PHPç‰ˆæœ¬å¤§äº5.4.0ï¼Œç›´æ¥è½¬ä¹‰å­—ç¬¦
         if (strnatcasecmp(PHP_VERSION, '5.4.0') >= 0) {
             $input = addslashes($input);
         } else {
-            // Ä§·¨×ªÒåÃ»¿ªÆô£¬×Ô¶¯¼Ó·´Ğ±¸Ü
+            // é­”æ³•è½¬ä¹‰æ²¡å¼€å¯ï¼Œè‡ªåŠ¨åŠ åæ–œæ 
             if (!get_magic_quotes_gpc()) {
                 $input = addslashes($input);
             }
         }
     }
-    //·ÀÖ¹×îºóÒ»¸ö·´Ğ±¸ÜÒıÆğSQL´íÎóÈç 'abc\'
+    //é˜²æ­¢æœ€åä¸€ä¸ªåæ–œæ å¼•èµ·SQLé”™è¯¯å¦‚ 'abc\'
     if(substr($input,-1,1)=='\\') $input=$input."'";//$input=substr($input,0,strlen($input)-1);
     return $input;
 }

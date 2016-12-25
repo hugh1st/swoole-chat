@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>健康咨询</title>
+<link rel="stylesheet" href="dist/css/jquery-weui.css"/>
+<link rel="stylesheet" href="dist/css/weui.min.css"/>
+<link rel="stylesheet" href="dist/css/app.css"/>
+</head>
+<body ontouchstart>
+<div class="mes-box">
+  <div class="timestamp">
+    <span>12/15 17:29</span>
+  </div>
+  <div class="mes-r">
+    <div class="mes-item text-m">
+      十二年来五次住院治疗，一直服用降糖药和消栓要，还坚持春、秋粮技术也但不见效果，你们医院能治吗？
+    </div>
+  </div>
+  <div class="mes-l">
+    <div class="mes-tit">杭州西溪医院：</div>
+    <div class="mes-item text-m">
+      十二年来五次住院治疗，一直服用降糖药和消栓要，还坚持春、秋粮技术也但不见效果，你们医院能治吗？
+    </div>
+  </div>
+  <div class="timestamp">
+    <span>12/15 17:29</span>
+  </div>
+  <div class="mes-r">
+    <div class="mes-item text-m">
+      十二年来五次住院治疗，一直服用降糖药和消栓要，还坚持春、秋粮技术也但不见效果，你们医院能治吗？
+    </div>
+  </div>
+  <div class="mes-l">
+    <div class="mes-tit">杭州西溪医院：</div>
+    <div class="mes-item text-m">
+      十二年来五次住院治疗，一直服用降糖药和消栓要，还坚持春、秋粮技术也但不见效果，你们医院能治吗？
+    </div>
+  </div>
+  <div class="mes-r">
+    <div class="mes-item text-m">
+      十二年来五次住院治疗，一直服用降糖药和消栓要，还坚持春、秋粮技术也但不见效果，你们医院能治吗？
+    </div>
+  </div>
+</div>
+
+
+<div class="mes-input">
+  <div class="mes-text">
+    <input class="weui_input" type="text">
+  </div>
+  <a class="weui_btn weui_btn_mini weui_btn_primary" href="javascript:;">发送</a>
+</div>
+
+</body>
+<script src="dist/js/jquery.min.js"></script>
+<script src="dist/js/jquery-weui.js"></script>
+<script src="dist/js/app.js"></script>
+<script>
+
+$(function() {
+  if($('body').height()<$(window).height()){     
+    $('body').height($(window).height()+'px');     
+  }else{
+    $('.weui_input').bind('focus',function(){  
+      $('.mes-input').css('position','static');  
+      $('.mes-box').css('padding-bottom','0');
+      $(window).scrollTop($(document).height());  
+    }).bind('blur',function(){  
+      $('.mes-input').css({'position':'fixed','bottom':'0'});  
+      $('.mes-box').css('padding-bottom','50px'); 
+    });  
+  }
+})
+
+//滚动页面到底部
+function botScroll() {
+  var pageHeight = $(document).height();
+  var winHeight = $(window).height();
+  if(pageHeight > winHeight) {
+    $(window).scrollTop(pageHeight - winHeight);
+  }
+}
+</script>
+<script src="./static/js/init.js"></script>
+<script src="./static/js/jquery.min.js"></script>
+<script src="./static/js/face.js?v=3345"></script>
+<script src="./static/js/create.div.js?v=1"></script>
+<script src="./static/js/chat.script.js?v=26"></script>
+<script src="./static/js/functions.js?v=2115"></script>
+<script src="./static/js/xlyjs.js?v=215"></script>
+</html>

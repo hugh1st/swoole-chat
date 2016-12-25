@@ -3,72 +3,16 @@ class hsw {
 	private $serv = null;
 	public function __construct(){
 		File::init();
-		/*
-		 $serv = new swoole_server(string $host, int $port, int $mode = SWOOLE_PROCESS, int $sock_type = SWOOLE_SOCK_TCP);
-		 	$host参数用来指定监听的ip地址，如127.0.0.1，或者外网地址，或者0.0.0.0监听全部地址
-				IPv4使用 127.0.0.1表示监听本机，0.0.0.0表示监听所有地址
-				IPv6使用::1表示监听本机，:: (0:0:0:0:0:0:0:0) 表示监听所有地址
-			$port监听的端口，如9501，监听小于1024端口需要root权限，如果此端口被占用server->start时会失败
-			$mode运行的模式，swoole提供了3种运行模式，默认为多进程模式
-				Base模式
-				线程模式
-				进程模式
-			$sock_type指定socket的类型，支持TCP/UDP、TCP6/UDP6、UnixSock Stream/Dgram 6种
-		 */
 		$this->serv = new swoole_websocket_server("0.0.0.0",9501);
-		/*
-		 用于设置swoole_server运行时的各项参数
-		 	最大连接：max_conn => 10000
-		 		此参数用来设置Server最大允许维持多少个tcp连接。超过此数量后，新进入的连接将被拒绝。
-				此参数不要调整的过大，根据机器内存的实际情况来设置。Swoole会根据此数值一次性分配一块大内存来保存Connection信息
-			守护进程化：daemonize => 1
-				加入此参数后，执行php server.php将转入后台作为守护进程运行
-			reactor线程数：reactor_num => 2
-				通过此参数来调节poll线程的数量，以充分利用多核
-				reactor_num和writer_num默认设置为CPU核数
-			worker进程数：worker_num => 4
-				设置启动的worker进程数量。swoole采用固定worker进程的模式。
-				PHP代码中是全异步非阻塞，worker_num配置为CPU核数的1-4倍即可。如果是同步阻塞，worker_num配置为100或者更高，具体要看每次请求处理的耗时和操作系统负载状况。
-				当设定的worker进程数小于reactor线程数时，会自动调低reactor线程的数量
-			max_request：max_request => 2000
-				此参数表示worker进程在处理完n次请求后结束运行。manager会重新创建一个worker进程。此选项用来防止worker进程内存溢出。
-				PHP代码也可以使用memory_get_usage来检测进程的内存占用情况，发现接近memory_limit时，调用exit()退出进程。manager进程会回收此进程，然后重新启动一个新的Worker进程。
-				onConnect/onClose不增加计数
-				设置为0表示不自动重启。在Worker进程中需要保存连接信息的服务，需要设置为0.
-		 */
 		$this->serv->set(array(
 			'task_worker_num'     => 8
 		));
-		//注册Server的事件回调函数。
-		$this->serv->on("open",array($this,"onOpen"));	
+		$this->serv->on("open",array($this,"onOpen"));
 		$this->serv->on("message",array($this,"onMessage"));
 		$this->serv->on("Task",array($this,"onTask"));
 		$this->serv->on("Finish",array($this,"onFinish"));
 		$this->serv->on("close",array($this,"onClose"));
-		/*
-		 	启动server，监听所有TCP/UDP端口，函数原型：
-			启动成功后会创建worker_num+2个进程。主进程+Manager进程+worker_num个Worker进程。
-		 */
 		$this->serv->start();
-	}
-	
-	public function onWorkerStart($serv, $worker_id)
-	{
-		if (!$serv->taskworker) {
-			$serv->tick(1000, function ($id) {
-				var_dump($id);
-			});
-		}
-		else
-		{
-			$serv->addtimer(1000);
-		}
-	}
-	
-	public function onReceive($server, $fd, $from_id, $data) {
-		$server->tick(1000, function() use ($server, $fd) {
-			$server->send($fd, "hello world");
-		});
 	}
 	
 	public function onOpen( $serv , $request ){
@@ -77,30 +21,32 @@ class hsw {
 			'fd' => $request->fd
 		);
 		$this->serv->task( json_encode($data) );
-		echo "open\n";
 	}
 	
 	public function onMessage( $serv , $frame ){
-		$data = json_decode( $frame->data , true );
+		$data = json_decode( $frame->data , true );   
+		echo "message:\n";
+		echo json_encode($data);
+		echo "\n";
 		switch($data['type']){
-			case 1://登录
+			case 1://登录:{"type":1,"name":"Mapleleaf","email":"e_dao@qq.com","roomid":"a"}
 				$data = array(
 					'task' => 'login',
 					'params' => array(
-							'name' => $data['name'],
-							'email' => $data['email']
+							'token' => $data['token'],
+							'wxid' => $data['wxid']
 						),
 					'fd' => $frame->fd,
 					'roomid' =>$data['roomid']
 				);
-				if(!$data['params']['name'] || !$data['params']['email'] ){
+				if(!$data['params']['token'] || !$data['params']['token'] ){
 					$data['task'] = "nologin";
 					$this->serv->task( json_encode($data) );
 					break;
 				}
 				$this->serv->task( json_encode($data) );
 				break;
-			case 2: //新消息
+			case 2: //新消息:{"type":2,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_10.jpg","message":"\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8\u54c8","c":"text","roomid":"a"}
 				$data = array(
 					'task' => 'new',
 					'params' => array(
@@ -113,8 +59,39 @@ class hsw {
 					'roomid' => $data['roomid']
 				);
 				$this->serv->task( json_encode($data) );
+				
+				$db = new swoole_mysql;
+				$server = array(
+				    'host' => '47.90.39.2',
+				    'user' => 'root',
+				    'password' => 'yyj1988615',
+				    'database' => 'chat',
+				);
+				
+				$db->connect($server, function ($db, $r, $data) {
+				    var_dump($data);
+				    if ($r === false) {
+				        var_dump($db->connect_errno, $db->connect_error);
+				        die;
+				    }
+				    $sql = "INSERT INTO message ( room_id, user_id, message, add_time ) VALUES ( 1, 1, '{$data['message']}', 1);";
+				    echo $sql."\n";
+				    $db->query($sql, function(swoole_mysql $db, $r) {
+				        global $s;
+				        if ($r === false)
+				        {
+				            var_dump($db->error, $db->errno);
+				        }
+				        elseif ($r === true )
+				        {
+				            var_dump($db->affected_rows, $db->insert_id);
+				        }
+				        var_dump($r);
+				        $db->close();
+				    });
+				});
 				break;
-			case 3: // 改变房间
+			case 3: // 改变房间:{"type":3,"name":"admin","avatar":"http://47.90.39.2:8081/static/images/avatar/f1/f_2.jpg","oldroomid":"a","roomid":"b"}
 				$data = array(
 					'task' => 'change',
 					'params' => array(
