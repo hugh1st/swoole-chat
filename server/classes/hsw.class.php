@@ -59,14 +59,18 @@ class hsw {
 					$sql = "select {$fields} from user where uuid = '{$wxid}'";
 					echo $sql."\n";
 					$db->query($sql, function(swoole_mysql $db, $r) {
-						global $s;
+						echo "1\n";
 						if ($r === false){
+							echo "2\n";
 							var_dump($db->error, $db->errno);
 						}elseif ($r === true ){
-							var_dump($db->affected_rows, $db->insert_id);
+							echo "3\n";
 							$this->serv->task( json_encode($data) );
+							echo "4\n";
 						}
+						echo "5\n";
 						var_dump($r);
+						echo "6\n";
 						$db->close();
 					});
 				});
